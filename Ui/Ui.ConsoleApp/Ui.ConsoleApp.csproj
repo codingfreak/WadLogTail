@@ -81,8 +81,8 @@
       <HintPath>..\..\packages\Newtonsoft.Json.8.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="s2Libs.s2Azure, Version=2.0.8.66, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\s2Libs.s2Azure.2.0.8\lib\net\s2Libs.s2Azure.dll</HintPath>
+    <Reference Include="s2Libs.s2Azure, Version=2.0.10.68, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\s2Libs.s2Azure.2.0.10\lib\net\s2Libs.s2Azure.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="s2Libs.s2Base, Version=2.0.30.330, Culture=neutral, processorArchitecture=MSIL">

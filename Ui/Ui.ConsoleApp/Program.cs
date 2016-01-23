@@ -233,13 +233,20 @@
             Console.SetCursorPosition(0, 1);
             Console.ForegroundColor = ConsoleColor.Black;
             Console.BackgroundColor = ConsoleColor.DarkGray;
-            var headerLine = $"{"Time ^",-19} | {"Message"}";
+            var roleInstanceLength = 20;
+            if (allEntries.Any())
+            {
+                roleInstanceLength = allEntries.Max(e => e.RoleInstance.Length);
+            }
+            var headerFormat = "{0, -19} | {1, -6} | {2, " + roleInstanceLength * -1 + "} | {3}";
+            var format = "{0, 19} | {1, 6} | {2, " + roleInstanceLength + "} | {3}";
+            var headerLine = string.Format(headerFormat, "Timetamp ^", "PID", "Role Instance", "Message");
             headerLine += new string(' ', Console.WindowWidth - headerLine.Length);
             Console.Write(headerLine);
             Console.ResetColor();
             // 
             var line = 2;
-            allEntries.OrderByDescending(entry => entry.PartitionKey).Take(Console.WindowHeight - 3).ToList().ForEach(
+            allEntries.OrderByDescending(entry => entry.PartitionKey).ThenByDescending(entry => entry.RowIndexValue).Take(Console.WindowHeight - 3).ToList().ForEach(
                 entry =>
                 {
                     var currentTicks = long.Parse(entry.PartitionKey);
@@ -248,7 +255,13 @@
                         Console.ForegroundColor = ConsoleColor.White;
                     }
                     Console.SetCursorPosition(0, line++);
-                    Console.Write("{0, 19} | {1}", entry.Timestamp.ToLocalTime().DateTime, entry.Message.Length <= 300 ? entry.Message : entry.Message.Substring(0, 299));
+                    var message = entry.MessageCleaned;   
+                                     
+                    Console.Write(format, 
+                        entry.Timestamp.ToLocalTime().DateTime,                         
+                        entry.Pid,                        
+                        entry.RoleInstance,
+                        message.Length <= 300 ? message : message.Substring(0, 299));
                 });
             Console.ResetColor();
         }
