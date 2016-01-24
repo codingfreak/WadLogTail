@@ -23,6 +23,8 @@
         private static int _currentConsoleHeight;
         private static int _currentConsoleWidth;
 
+        private static readonly TableHelper<WadLogEntity> Helper = new TableHelper<WadLogEntity>();
+
         private static bool _isBusy;
 
         #endregion
@@ -34,7 +36,7 @@
             var cloudStorageConnectionString = CloudConfigurationManager.GetSetting("StorageConnectionString");
             int secondsInPast;
             if (!int.TryParse(ConfigurationManager.AppSettings["TimeSpanSeconds"] ?? "3600", out secondsInPast))
-            {                
+            {
                 PrintProgramInfo("Invalid settings value SecondsInPast.");
                 Console.ReadKey();
                 return;
@@ -50,7 +52,7 @@
                 cloudStorageConnectionString = args[0];
             }
             if (args.Length >= 2 && !int.TryParse(args[1], out secondsInPast))
-            {                
+            {
                 PrintProgramInfo("Invalid arguments. Seconds argument must be a number.");
                 Console.ReadKey();
                 return;
@@ -61,7 +63,7 @@
                 storageAccount = CloudStorageAccount.Parse(cloudStorageConnectionString);
             }
             catch
-            {                
+            {
                 PrintProgramInfo($"Invalid storage connection string: {cloudStorageConnectionString}");
                 Console.ReadKey();
                 return;
@@ -71,19 +73,18 @@
             WriteConsoleFooter(allEntries.Count);
             var tableClient = storageAccount.CreateCloudTableClient();
             var table = tableClient.GetTableReference("WADLogsTable");
-            var heler = new TableHelper<WadLogEntity>();
-            heler.MonitoringReceivedNewEntries += (s, e) =>
+            Helper.MonitoringReceivedNewEntries += (s, e) =>
             {
                 var entries = e.Entries;
                 var lastTicks = long.Parse(allEntries.LastOrDefault()?.PartitionKey ?? "0");
                 allEntries.AddRange(entries);
                 WriteEntries(storageAccount, allEntries, lastTicks);
             };
-            heler.QueryStarted += (s, e) =>
+            Helper.QueryStarted += (s, e) =>
             {
                 _isBusy = true;
             };
-            heler.QueryFinished += (s, e) =>
+            Helper.QueryFinished += (s, e) =>
             {
                 _isBusy = false;
             };
@@ -144,7 +145,7 @@
                     }
                 });
             var tokenSource = new CancellationTokenSource();
-            Task.Run(async () => await heler.MonitorTableAsync(table, tokenSource.Token, 5, secondsInPast), tokenSource.Token);
+            Task.Run(async () => await Helper.MonitorTableAsync(table, tokenSource.Token, 5, secondsInPast), tokenSource.Token);
             Console.ReadKey();
             Console.Clear();
             Console.WriteLine("Cancelling process...");
@@ -161,7 +162,7 @@
             Console.WriteLine("codingfreaks WadLogTail\n");
             if (!string.IsNullOrEmpty(error))
             {
-                Console.ForegroundColor = ConsoleColor.Red;                
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine(error);
                 Console.ResetColor();
             }
@@ -191,7 +192,7 @@
             Console.ForegroundColor = ConsoleColor.White;
             Console.BackgroundColor = ConsoleColor.DarkGreen;
             Console.SetCursorPosition(0, Console.WindowHeight - 1);
-            var line = $"{count} entries loaded | last query at {lastQueryTime} | last query time {WadLogTableHelper.LastQueryTime}";
+            var line = $"{count} entries loaded | last query at {lastQueryTime} | last query time {Helper.LastQueryTime}";
             line += new string(' ', Console.WindowWidth - line.Length);
             Console.Write(line);
             Console.ResetColor();
@@ -256,13 +257,9 @@
                         Console.ForegroundColor = ConsoleColor.White;
                     }
                     Console.SetCursorPosition(0, line++);
-                    var message = entry.MessageCleaned;   
-                                     
-                    Console.Write(format, 
-                        entry.Timestamp.ToLocalTime().DateTime,                         
-                        entry.Pid,                        
-                        entry.RoleInstance,
-                        message.Length <= 300 ? message : message.Substring(0, 299));
+                    var message = entry.MessageCleaned;
+
+                    Console.Write(format, entry.Timestamp.ToLocalTime().DateTime, entry.Pid, entry.RoleInstance, message.Length <= 300 ? message : message.Substring(0, 299));
                 });
             Console.ResetColor();
         }
