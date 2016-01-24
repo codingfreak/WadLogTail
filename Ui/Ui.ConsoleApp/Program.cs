@@ -7,10 +7,10 @@
     using System.Threading;
     using System.Threading.Tasks;
 
+    using codingfreaks.cfUtils.Logic.Azure;
+
     using Microsoft.Azure;
     using Microsoft.WindowsAzure.Storage;
-
-    using s2.s2Utils.Logic.Azure;
 
     class Program
     {

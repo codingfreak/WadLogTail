@@ -41,6 +41,18 @@
     <SlowCheetahTargets Condition=" '$(SlowCheetah_EnableImportFromNuGet)'=='true' and Exists('$(SlowCheetah_NuGetImportPath)') ">$(SlowCheetah_NuGetImportPath)</SlowCheetahTargets>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="cfUtils.cfAzureUtils, Version=1.0.3.3, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\codingfreaks.libs.cfUtils.cfAzureUtils.1.0.3\lib\net\cfUtils.cfAzureUtils.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="cfUtils.cfBaseUtils, Version=1.0.1.4, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\codingfreaks.libs.cfUtils.cfBaseUtils.1.0.1\lib\net\cfUtils.cfBaseUtils.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="cfUtils.cfPortableUtils, Version=1.0.2.9, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\codingfreaks.libs.cfUtils.cfPortableUtils.1.0.2\lib\net\cfUtils.cfPortableUtils.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.Azure.KeyVault.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.Azure.KeyVault.Core.1.0.0\lib\net40\Microsoft.Azure.KeyVault.Core.dll</HintPath>
       <Private>True</Private>
@@ -79,18 +91,6 @@
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Newtonsoft.Json.8.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="s2Libs.s2Azure, Version=2.0.10.68, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\s2Libs.s2Azure.2.0.10\lib\net\s2Libs.s2Azure.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="s2Libs.s2Base, Version=2.0.30.330, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\s2Libs.s2Base.2.0.30\lib\net\s2Libs.s2Base.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="s2Libs.s2PortableUtils, Version=2.1.23.74, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\s2Libs.s2PortableUtils.2.1.23\lib\net\s2Libs.s2PortableUtils.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
