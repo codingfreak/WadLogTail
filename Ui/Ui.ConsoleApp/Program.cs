@@ -71,18 +71,19 @@
             WriteConsoleFooter(allEntries.Count);
             var tableClient = storageAccount.CreateCloudTableClient();
             var table = tableClient.GetTableReference("WADLogsTable");
-            WadLogTableHelper.MonitoringReceivedNewEntries += (s, e) =>
+            var heler = new TableHelper<WadLogEntity>();
+            heler.MonitoringReceivedNewEntries += (s, e) =>
             {
                 var entries = e.Entries;
                 var lastTicks = long.Parse(allEntries.LastOrDefault()?.PartitionKey ?? "0");
                 allEntries.AddRange(entries);
                 WriteEntries(storageAccount, allEntries, lastTicks);
             };
-            WadLogTableHelper.QueryStarted += (s, e) =>
+            heler.QueryStarted += (s, e) =>
             {
                 _isBusy = true;
             };
-            WadLogTableHelper.QueryFinished += (s, e) =>
+            heler.QueryFinished += (s, e) =>
             {
                 _isBusy = false;
             };
@@ -143,7 +144,7 @@
                     }
                 });
             var tokenSource = new CancellationTokenSource();
-            Task.Run(async () => await table.MonitorTableAsync(tokenSource.Token, 5, secondsInPast), tokenSource.Token);
+            Task.Run(async () => await heler.MonitorTableAsync(table, tokenSource.Token, 5, secondsInPast), tokenSource.Token);
             Console.ReadKey();
             Console.Clear();
             Console.WriteLine("Cancelling process...");

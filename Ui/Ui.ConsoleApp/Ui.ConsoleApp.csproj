@@ -41,8 +41,8 @@
     <SlowCheetahTargets Condition=" '$(SlowCheetah_EnableImportFromNuGet)'=='true' and Exists('$(SlowCheetah_NuGetImportPath)') ">$(SlowCheetah_NuGetImportPath)</SlowCheetahTargets>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="cfUtils.cfAzureUtils, Version=1.0.3.3, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\codingfreaks.libs.cfUtils.cfAzureUtils.1.0.3\lib\net\cfUtils.cfAzureUtils.dll</HintPath>
+    <Reference Include="cfUtils.cfAzureUtils, Version=1.0.4.7, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\codingfreaks.libs.cfUtils.cfAzureUtils.1.0.4\lib\net\cfUtils.cfAzureUtils.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="cfUtils.cfBaseUtils, Version=1.0.1.4, Culture=neutral, processorArchitecture=MSIL">
