@@ -1,0 +1,58 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:codingfreaks.WadLogTail.Ui.WindowsApp"
+        xmlns:Converters="clr-namespace:codingfreaks.cfUtils.Logic.Wpf.Converters;assembly=cfUtils.cfWpfUtils"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:Command="http://www.galasoft.ch/mvvmlight"
+        x:Class="codingfreaks.WadLogTail.Ui.WindowsApp.MainWindow"
+        mc:Ignorable="d"
+        Title="{Binding Title}" Height="350" Width="525">
+    <Window.Resources>
+        <Converters:InverseBoolConverter x:Key="InverseBoolConverter"/>
+        <Style TargetType="Button">
+            <Setter Property="Padding" Value="10 3"></Setter>
+            <Setter Property="Margin" Value="6 0 0 0"></Setter>
+        </Style>
+        <Style TargetType="DockPanel">
+            <Setter Property="Margin" Value="3"></Setter>
+        </Style>
+        <Style TargetType="DataGrid">
+            <Setter Property="Margin" Value="3"></Setter>
+        </Style>
+        <Style TargetType="TextBox">
+            <Setter Property="Padding" Value="3"></Setter>
+        </Style>
+    </Window.Resources>
+    <Window.DataContext>
+        <Binding Path="Main" Source="{StaticResource Locator}"/>
+    </Window.DataContext>
+    <DockPanel LastChildFill="True">
+        <DockPanel DockPanel.Dock="Top" LastChildFill="True">
+            <Button DockPanel.Dock="Right" Content="{Binding StartStopCaption}" Command="{Binding StartStopMonitoringCommand}"/>
+            <TextBox DockPanel.Dock="Left" Text="{Binding StorageConnectionString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsRunning, Converter={StaticResource InverseBoolConverter}}"/>
+        </DockPanel>
+        <StatusBar DockPanel.Dock="Bottom">
+            <StatusBarItem DockPanel.Dock="Right">
+                <Label Content="{Binding Entries.Count, Mode=OneWay}"></Label>
+            </StatusBarItem>
+            <StatusBarItem>
+                <Label Content="{Binding StatusText}"></Label>
+            </StatusBarItem>
+        </StatusBar>
+        <!-- add the grid last so it takes the complete remaining space of the form -->
+        <DataGrid DockPanel.Dock="Top" ItemsSource="{Binding Entries}" IsReadOnly="True" AutoGenerateColumns="False" >
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding FormattedLocalTimestamp}" ClipboardContentBinding="{x:Null}" Header="Timestamp" Width="100" SortMemberPath="Timestamp" SortDirection="Descending"/>
+                <DataGridTextColumn Binding="{Binding EntityItem.MessageCleaned}" CanUserSort="False" ClipboardContentBinding="{x:Null}" Header="Message" Width="400"/>
+            </DataGrid.Columns>
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="Sorting">
+                    <Command:EventToCommand Command="{Binding GridSortingCommand, Mode=OneWay}" PassEventArgsToCommand="True"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+        </DataGrid>
+    </DockPanel>
+</Window>

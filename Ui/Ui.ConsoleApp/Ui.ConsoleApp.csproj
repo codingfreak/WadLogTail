@@ -41,16 +41,16 @@
     <SlowCheetahTargets Condition=" '$(SlowCheetah_EnableImportFromNuGet)'=='true' and Exists('$(SlowCheetah_NuGetImportPath)') ">$(SlowCheetah_NuGetImportPath)</SlowCheetahTargets>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="cfUtils.cfAzureUtils, Version=1.0.4.7, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\codingfreaks.libs.cfUtils.cfAzureUtils.1.0.4\lib\net\cfUtils.cfAzureUtils.dll</HintPath>
+    <Reference Include="cfUtils.cfAzureUtils, Version=1.0.6.9, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\codingfreaks.libs.cfUtils.cfAzureUtils.1.0.6\lib\net\cfUtils.cfAzureUtils.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="cfUtils.cfBaseUtils, Version=1.0.1.4, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\codingfreaks.libs.cfUtils.cfBaseUtils.1.0.1\lib\net\cfUtils.cfBaseUtils.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="cfUtils.cfPortableUtils, Version=1.0.2.9, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\codingfreaks.libs.cfUtils.cfPortableUtils.1.0.2\lib\net\cfUtils.cfPortableUtils.dll</HintPath>
+    <Reference Include="cfUtils.cfPortableUtils, Version=1.0.3.11, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\codingfreaks.libs.cfUtils.cfPortableUtils.1.0.3\lib\net\cfUtils.cfPortableUtils.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Azure.KeyVault.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
