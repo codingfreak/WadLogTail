@@ -21,7 +21,7 @@ namespace codingfreaks.WadLogTail.Ui.WindowsApp.ViewModel
     /// <summary>
     /// The view model for the <see cref="MainWindow"/>.
     /// </summary>
-    public class MainViewModel : ViewModelBase
+    public class MainViewModel : BroadcastViewModelBase
     {
         #region member vars
 
@@ -83,6 +83,7 @@ namespace codingfreaks.WadLogTail.Ui.WindowsApp.ViewModel
                         IsRunning = true;
                     },
                     () => IsRunning || !StorageConnectionString.IsNullOrEmpty());
+                StartStopMonitoringCommand.DependsOn(() => StorageConnectionString);
                 GridSortingCommand = new RelayCommand<DataGridSortingEventArgs>(
                     e =>
                     {
@@ -156,7 +157,7 @@ namespace codingfreaks.WadLogTail.Ui.WindowsApp.ViewModel
         /// <summary>
         /// Starts or stops a monitoring.
         /// </summary>
-        public RelayCommand StartStopMonitoringCommand { get; private set; }
+        public AutoRelayCommand StartStopMonitoringCommand { get; private set; }
 
         /// <summary>
         /// The text to display in the status bar.
