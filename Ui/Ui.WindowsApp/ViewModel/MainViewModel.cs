@@ -41,10 +41,6 @@ namespace codingfreaks.WadLogTail.Ui.WindowsApp.ViewModel
             BindingOperations.EnableCollectionSynchronization(Entries, _lock);
             if (!IsInDesignMode)
             {
-#if DEBUG
-                StorageConnectionString =
-                    "DefaultEndpointsProtocol=https;AccountName=cybertradingdevworker;AccountKey=Y8q9QQ9cznnnaQwr3Wnkm3mobfSsjQ+biTPbMOAw/KVld/lzaG7mZV/pElrcTcr0FVNKiWX5TcfNZtXTasIeRA==";
-#endif
                 Helper.EntriesReceived += (s, e) =>
                 {
                     Dispatcher.CurrentDispatcher.Invoke(
