@@ -2,17 +2,16 @@ namespace codingfreaks.WadLogTail.Ui.WindowsApp.ViewModel
 {
     using System;
     using System.ComponentModel;
-    using System.Diagnostics;
+
+    using codingfreaks.cfUtils.Logic.Portable.Extensions;
+
     using System.Linq;
-    using System.Linq.Expressions;
-    using System.Threading;
     using System.Threading.Tasks;
     using System.Windows.Controls;
     using System.Windows.Data;
     using System.Windows.Threading;
 
     using codingfreaks.cfUtils.Logic.Azure;
-    using codingfreaks.cfUtils.Logic.Portable.Extensions;
     using codingfreaks.cfUtils.Logic.Wpf.Components;
     using codingfreaks.cfUtils.Logic.Wpf.MvvmLight;
 
@@ -28,9 +27,11 @@ namespace codingfreaks.WadLogTail.Ui.WindowsApp.ViewModel
 
         private readonly TableHelper<WadLogEntity> Helper = new TableHelper<WadLogEntity>();
 
-        private static object _lock = new object();
+        #endregion
 
-        public bool IsRunning { get; private set; }
+        #region constants
+
+        private static readonly object _lock = new object();
 
         #endregion
 
@@ -51,12 +52,12 @@ namespace codingfreaks.WadLogTail.Ui.WindowsApp.ViewModel
                                 Entries.All(entry => entry.IsNew = false);
                                 Entries.AddRange(
                                     e.Entries.Select(
-                                        entry => new WadLogItemViewModel()
+                                        entry => new WadLogItemViewModel
                                         {
                                             EntityItem = entry,
                                             IsNew = true
-                                        }));  
-                                SortEntities("timestamp", false);                              
+                                        }));
+                                SortEntities("timestamp", false);
                             }
                             catch (Exception ex)
                             {
@@ -83,7 +84,7 @@ namespace codingfreaks.WadLogTail.Ui.WindowsApp.ViewModel
                     },
                     () => IsRunning || !StorageConnectionString.IsNullOrEmpty());
                 GridSortingCommand = new RelayCommand<DataGridSortingEventArgs>(
-                    (e) =>
+                    e =>
                     {
                         var newSortAscending = (e.Column.SortDirection ?? 0) == ListSortDirection.Descending;
                         SortEntities(e.Column.SortMemberPath, newSortAscending);
@@ -95,19 +96,6 @@ namespace codingfreaks.WadLogTail.Ui.WindowsApp.ViewModel
             {
                 StorageConnectionString = "StorageConnectionString";
             }
-        }
-
-        private void SortEntities(string sortMemberPath, bool ascending = true)
-        {
-            var entries = Entries.ToList();
-            Entries.Clear();
-            switch (sortMemberPath.ToLower())
-            {
-                case "timestamp":
-                    entries = ascending ? entries.OrderBy(e => e.EntityItem.Timestamp).ToList() : entries.OrderByDescending(e => e.EntityItem.Timestamp).ToList();
-                    break;                    
-            }
-            Entries.AddRange(entries);
         }
 
         #endregion
@@ -126,9 +114,39 @@ namespace codingfreaks.WadLogTail.Ui.WindowsApp.ViewModel
             base.Cleanup();
         }
 
+        /// <summary>
+        /// Is called when the grid control performs the sorting.
+        /// </summary>
+        /// <param name="sortMemberPath">The member path for the column that should be sorted.</param>
+        /// <param name="ascending"><c>true</c> if the new sort direction should be ascending.</param>
+        private void SortEntities(string sortMemberPath, bool ascending = true)
+        {
+            var entries = Entries.ToList();
+            Entries.Clear();
+            switch (sortMemberPath.ToLower())
+            {
+                case "timestamp":
+                    entries = ascending ? entries.OrderBy(e => e.EntityItem.Timestamp).ToList() : entries.OrderByDescending(e => e.EntityItem.Timestamp).ToList();
+                    break;
+            }
+            Entries.AddRange(entries);
+        }
+
         #endregion
 
         #region properties
+
+        /// <summary>
+        /// Entries already read from Azure.
+        /// </summary>
+        public OptimizedObservableCollection<WadLogItemViewModel> Entries { get; set; } = new OptimizedObservableCollection<WadLogItemViewModel>();
+
+        /// <summary>
+        /// Is called when the grids Sorting event is raised.
+        /// </summary>
+        public RelayCommand<DataGridSortingEventArgs> GridSortingCommand { get; private set; }
+
+        public bool IsRunning { get; private set; }
 
         /// <summary>
         /// The caption for the start-/stop button.
@@ -136,24 +154,14 @@ namespace codingfreaks.WadLogTail.Ui.WindowsApp.ViewModel
         public string StartStopCaption => IsRunning ? "Stop" : "Start";
 
         /// <summary>
-        /// The text to display in the status bar.
-        /// </summary>
-        public string StatusText { get; set; }
-
-        /// <summary>
         /// Starts or stops a monitoring.
         /// </summary>
         public RelayCommand StartStopMonitoringCommand { get; private set; }
 
         /// <summary>
-        /// Is called when the grids Sorting event is raised.
+        /// The text to display in the status bar.
         /// </summary>
-        public RelayCommand<DataGridSortingEventArgs> GridSortingCommand { get; private set; }
-
-        /// <summary>
-        /// Entries already read from Azure.
-        /// </summary>
-        public OptimizedObservableCollection<WadLogItemViewModel> Entries { get; set; } = new OptimizedObservableCollection<WadLogItemViewModel>();
+        public string StatusText { get; set; }
 
         /// <summary>
         /// The Azure storage connection string.
