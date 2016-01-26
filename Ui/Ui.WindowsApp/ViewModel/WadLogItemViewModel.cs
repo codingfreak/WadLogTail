@@ -34,6 +34,11 @@ namespace codingfreaks.WadLogTail.Ui.WindowsApp.ViewModel
         /// </summary>
         public DateTime LocalTimestamp => EntityItem.EventDateTime.ToLocalTime();
 
+        /// <summary>
+        /// An offset with a number that shows on which position this item was received.
+        /// </summary>
+        public long ReceiveCounter { get; set; }
+
         #endregion
     }
 }

@@ -8,7 +8,7 @@
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>codingfreaks.WadLogTail.Ui.WindowsApp</RootNamespace>
-    <AssemblyName>AzureTableWatcher</AssemblyName>
+    <AssemblyName>AzureLogTableWatcher</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -37,20 +37,20 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="cfUtils.cfAzureUtils, Version=1.0.6.9, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\codingfreaks.libs.cfUtils.cfAzureUtils.1.0.6\lib\net\cfUtils.cfAzureUtils.dll</HintPath>
+    <Reference Include="cfUtils.cfAzureUtils, Version=1.0.7.13, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\codingfreaks.libs.cfUtils.cfAzureUtils.1.0.7\lib\net\cfUtils.cfAzureUtils.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="cfUtils.cfBaseUtils, Version=1.0.1.4, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\codingfreaks.libs.cfUtils.cfBaseUtils.1.0.1\lib\net\cfUtils.cfBaseUtils.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="cfUtils.cfPortableUtils, Version=1.0.3.11, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\codingfreaks.libs.cfUtils.cfPortableUtils.1.0.3\lib\net\cfUtils.cfPortableUtils.dll</HintPath>
+    <Reference Include="cfUtils.cfPortableUtils, Version=1.0.4.13, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\codingfreaks.libs.cfUtils.cfPortableUtils.1.0.4\lib\net\cfUtils.cfPortableUtils.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="cfUtils.cfWpfUtils, Version=1.0.1.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\codingfreaks.libs.cfUtils.cfWpfUtils.1.0.1\lib\net\cfUtils.cfWpfUtils.dll</HintPath>
+    <Reference Include="cfUtils.cfWpfUtils, Version=1.0.3.3, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\codingfreaks.libs.cfUtils.cfWpfUtils.1.0.3\lib\net\cfUtils.cfWpfUtils.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="GalaSoft.MvvmLight, Version=5.2.0.37222, Culture=neutral, PublicKeyToken=e7570ab207bcb616, processorArchitecture=MSIL">

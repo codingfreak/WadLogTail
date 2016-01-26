@@ -8,8 +8,10 @@
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:Command="http://www.galasoft.ch/mvvmlight"
         x:Class="codingfreaks.WadLogTail.Ui.WindowsApp.MainWindow"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        xmlns:xcdg="http://schemas.xceed.com/wpf/xaml/datagrid"
         mc:Ignorable="d"
-        Title="{Binding Title}" Height="350" Width="525">
+        Title="{Binding Title}" Height="350" Width="893">
     <Window.Resources>
         <Converters:InverseBoolConverter x:Key="InverseBoolConverter"/>
         <Style TargetType="Button">
@@ -17,6 +19,9 @@
             <Setter Property="Margin" Value="6 0 0 0"></Setter>
         </Style>
         <Style TargetType="DockPanel">
+            <Setter Property="Margin" Value="3"></Setter>
+        </Style>
+        <Style TargetType="Grid" x:Key="InnerGrid">
             <Setter Property="Margin" Value="3"></Setter>
         </Style>
         <Style TargetType="DataGrid">
@@ -34,19 +39,52 @@
             <Button DockPanel.Dock="Right" Content="{Binding StartStopCaption}" Command="{Binding StartStopMonitoringCommand}"/>
             <TextBox DockPanel.Dock="Left" Text="{Binding StorageConnectionString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsRunning, Converter={StaticResource InverseBoolConverter}}"/>
         </DockPanel>
+        <Grid DockPanel.Dock="Top" Style="{DynamicResource InnerGrid}">
+            <TextBox Text="{Binding FilterText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsRunning}"/>
+        </Grid>
         <StatusBar DockPanel.Dock="Bottom">
-            <StatusBarItem DockPanel.Dock="Right">
+            <StatusBarItem DockPanel.Dock="Right" ToolTip="Loaded rows.">
                 <Label Content="{Binding Entries.Count, Mode=OneWay}"></Label>
+            </StatusBarItem>
+            <StatusBarItem DockPanel.Dock="Right" ToolTip="Timestamp of last result.">
+                <Label Content="{Binding FormattedLastResultReceived, Mode=OneWay}"></Label>
             </StatusBarItem>
             <StatusBarItem>
                 <Label Content="{Binding StatusText}"></Label>
             </StatusBarItem>
         </StatusBar>
         <!-- add the grid last so it takes the complete remaining space of the form -->
-        <DataGrid DockPanel.Dock="Top" ItemsSource="{Binding Entries}" IsReadOnly="True" AutoGenerateColumns="False" >
+        <DataGrid DockPanel.Dock="Top" ItemsSource="{Binding Entries}" IsReadOnly="True" AutoGenerateColumns="False" GridLinesVisibility="Vertical">
+            <DataGrid.Resources>
+                <Style TargetType="DataGridRow">
+                    <Setter Property="Height" Value="32" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsNew}" Value="True">
+                            <Setter Property="Foreground" Value="Green" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+                <Style TargetType="DataGridCell">
+                    <Setter Property="Padding" Value="2 6"></Setter>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type DataGridCell}">
+                                <Border Padding="{TemplateBinding Padding}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
+                                    <ContentPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </DataGrid.Resources>
             <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding FormattedLocalTimestamp}" ClipboardContentBinding="{x:Null}" Header="Timestamp" Width="100" SortMemberPath="Timestamp" SortDirection="Descending"/>
-                <DataGridTextColumn Binding="{Binding EntityItem.MessageCleaned}" CanUserSort="False" ClipboardContentBinding="{x:Null}" Header="Message" Width="400"/>
+                <DataGridTextColumn Binding="{Binding FormattedLocalTimestamp}" Header="Timestamp" Width="100" SortMemberPath="Timestamp" SortDirection="Descending"/>
+                <DataGridTextColumn Binding="{Binding EntityItem.Pid}" Header="PID" Width="100"/>
+                <DataGridTextColumn Binding="{Binding EntityItem.RowIndex}" Header="Row index" Width="100"/>
+                <DataGridTextColumn Binding="{Binding EntityItem.Level}" Header="Level" Width="100"/>
+                <DataGridTextColumn Binding="{Binding EntityItem.Role}" Header="Role" Width="100"/>
+                <DataGridTextColumn Binding="{Binding EntityItem.MessageCleaned}" CanUserSort="False" Header="Message" Width="400"/>
+                <DataGridTextColumn Binding="{Binding IsNew}" Visibility="Hidden"/>
             </DataGrid.Columns>
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="Sorting">
