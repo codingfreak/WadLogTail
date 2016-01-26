@@ -6,16 +6,41 @@
         xmlns:local="clr-namespace:codingfreaks.WadLogTail.Ui.WindowsApp"
         mc:Ignorable="d"
         Title="{Binding Title, Mode=OneWay}" Height="356" Width="606" WindowStartupLocation="CenterScreen" ShowInTaskbar="False" WindowStyle="ToolWindow">
+    <Window.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Padding" Value="10 3" />
+            <Setter Property="MinWidth" Value="80"></Setter>
+        </Style>
+        <Style TargetType="TextBlock" x:Key="HeaderText">
+            <Setter Property="Padding" Value="10 5" />
+            <Setter Property="Background" Value="LightSkyBlue" />
+            <Setter Property="Foreground" Value="DarkBlue" />
+            <Setter Property="MinWidth" Value="80"></Setter>
+        </Style>
+    </Window.Resources>
     <Window.DataContext>
         <Binding Path="SelectStorageAccount" Source="{StaticResource Locator}"/>
     </Window.DataContext>
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="200" />
-            <ColumnDefinition Width="3" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
-        
-        <GridSplitter Grid.Column="1"></GridSplitter>
-    </Grid>
+    <DockPanel LastChildFill="True" Margin="10">
+        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0 20 0 0">
+            <Button Content="OK" Command="{Binding OkCommand}"></Button>
+        </StackPanel>
+        <Grid DockPanel.Dock="Top">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="400" />
+                <ColumnDefinition Width="3" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <DockPanel LastChildFill="True" Grid.Column="0">
+                <TextBlock DockPanel.Dock="Top" Style="{DynamicResource HeaderText}">Select existing storage accounts</TextBlock>
+                <ListBox DockPanel.Dock="Top" ItemsSource="{Binding StoredAccounts}"></ListBox>
+            </DockPanel>
+            <GridSplitter Grid.Column="1"></GridSplitter>
+            <DockPanel LastChildFill="True" Grid.Column="2">
+                <TextBlock DockPanel.Dock="Top" Style="{DynamicResource HeaderText}">Account Data</TextBlock>
+                <Grid DockPanel.Dock="Top"></Grid>
+            </DockPanel>
+        </Grid>
+    </DockPanel>
 </Window>
+

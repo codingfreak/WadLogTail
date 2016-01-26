@@ -151,7 +151,10 @@
     <Compile Include="Enumerations\DataSourceType.cs" />
     <Compile Include="Enumerations\WindowTarget.cs" />
     <Compile Include="Enumerations\WindowType.cs" />
+    <Compile Include="Helper\Variables.cs" />
     <Compile Include="MessageListener.cs" />
+    <Compile Include="Models\ProgramSettings.cs" />
+    <Compile Include="Models\StorageAccountSetting.cs" />
     <Compile Include="Models\WindowOpenMessage.cs" />
     <Compile Include="Models\WindowRequestOpenMessage.cs" />
     <Compile Include="SelectStorageAccountWindow.xaml.cs">
