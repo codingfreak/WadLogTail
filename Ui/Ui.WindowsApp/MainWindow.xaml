@@ -11,7 +11,8 @@
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:xcdg="http://schemas.xceed.com/wpf/xaml/datagrid"
         mc:Ignorable="d"
-        Title="{Binding Title}" Height="350" Width="893">
+        Title="{Binding Title}" Height="350" Width="893"
+        IsEnabled="{Binding IsVisible, Source={StaticResource MessageListener}}">
     <Window.Resources>
         <Converters:InverseBoolConverter x:Key="InverseBoolConverter"/>
         <Style TargetType="Button">
@@ -37,6 +38,7 @@
     <DockPanel LastChildFill="True">
         <DockPanel DockPanel.Dock="Top" LastChildFill="True">
             <Button DockPanel.Dock="Right" Content="{Binding StartStopCaption}" Command="{Binding StartStopMonitoringCommand}"/>
+            <Button DockPanel.Dock="Right" Content="..." Command="{Binding OpenSelectStorageWindowCommand}"/>
             <TextBox DockPanel.Dock="Left" Text="{Binding StorageConnectionString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsRunning, Converter={StaticResource InverseBoolConverter}}"/>
         </DockPanel>
         <Grid DockPanel.Dock="Top" Style="{DynamicResource InnerGrid}">

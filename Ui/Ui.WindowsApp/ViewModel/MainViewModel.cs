@@ -10,6 +10,7 @@ namespace codingfreaks.WadLogTail.Ui.WindowsApp.ViewModel
 
     using System.Linq;
     using System.Threading.Tasks;
+    using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Data;
     using System.Windows.Threading;
@@ -17,8 +18,11 @@ namespace codingfreaks.WadLogTail.Ui.WindowsApp.ViewModel
     using codingfreaks.cfUtils.Logic.Azure;
     using codingfreaks.cfUtils.Logic.Wpf.Components;
     using codingfreaks.cfUtils.Logic.Wpf.MvvmLight;
+    using codingfreaks.WadLogTail.Ui.WindowsApp.Enumerations;
+    using codingfreaks.WadLogTail.Ui.WindowsApp.Models;
 
     using GalaSoft.MvvmLight.Command;
+    using GalaSoft.MvvmLight.Messaging;
 
     /// <summary>
     /// The view model for the <see cref="MainWindow"/>.
@@ -80,6 +84,18 @@ namespace codingfreaks.WadLogTail.Ui.WindowsApp.ViewModel
                         });
                 };
                 // define the command for starting and stopping
+                OpenSelectStorageWindowCommand = new AutoRelayCommand(
+                    () =>
+                    {
+                        Messenger.Default.Send(
+                            new WindowRequestOpenMessage()
+                            {
+                                WindowTarget = WindowTarget.ModalDialog,
+                                WindowType = WindowType.SelectStorageAccountView
+                            });
+                    },
+                    () => !IsRunning);
+                // define the command for starting and stopping
                 StartStopMonitoringCommand = new AutoRelayCommand(
                     () =>
                     {
@@ -124,6 +140,22 @@ namespace codingfreaks.WadLogTail.Ui.WindowsApp.ViewModel
                         FilterAndSortEntities(_lastSortMemberPath, _lastSortAsc);
                     }
                 };
+                // create a new window and display it whenever a response is received
+                Messenger.Default.Register<WindowOpenMessage>(
+                    this,
+                    o =>
+                    {
+                        var win = o.Window as Window;
+                        switch (o.WindowTarget)
+                        {
+                            case WindowTarget.Dialog:                                                                
+                                win?.Show();
+                                break;
+                            case WindowTarget.ModalDialog:                                                                
+                                win?.ShowDialog();
+                                break;
+                        }
+                    });
             }
             else
             {
@@ -249,6 +281,11 @@ namespace codingfreaks.WadLogTail.Ui.WindowsApp.ViewModel
         /// Starts or stops a monitoring.
         /// </summary>
         public AutoRelayCommand StartStopMonitoringCommand { get; private set; }
+
+        /// <summary>
+        /// Opens the window for selecting the storage account.
+        /// </summary>
+        public AutoRelayCommand OpenSelectStorageWindowCommand { get; private set; }
 
         /// <summary>
         /// The text to display in the status bar.

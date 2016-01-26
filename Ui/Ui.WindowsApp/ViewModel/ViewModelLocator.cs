@@ -19,6 +19,7 @@ namespace codingfreaks.WadLogTail.Ui.WindowsApp.ViewModel
         {
             ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
             SimpleIoc.Default.Register<MainViewModel>();
+            SimpleIoc.Default.Register<SelectStorageAccountViewModel>();
         }
 
         #endregion
@@ -34,6 +35,8 @@ namespace codingfreaks.WadLogTail.Ui.WindowsApp.ViewModel
         #region properties
 
         public MainViewModel Main => ServiceLocator.Current.GetInstance<MainViewModel>();
+
+        public SelectStorageAccountViewModel SelectStorageAccount => ServiceLocator.Current.GetInstance<SelectStorageAccountViewModel>();
 
         #endregion
     }

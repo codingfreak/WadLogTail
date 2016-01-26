@@ -147,7 +147,19 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Attributes\ViewModelDescriptionAttribute.cs" />
+    <Compile Include="Enumerations\DataSourceType.cs" />
+    <Compile Include="Enumerations\WindowTarget.cs" />
+    <Compile Include="Enumerations\WindowType.cs" />
+    <Compile Include="MessageListener.cs" />
+    <Compile Include="Models\WindowOpenMessage.cs" />
+    <Compile Include="Models\WindowRequestOpenMessage.cs" />
+    <Compile Include="SelectStorageAccountWindow.xaml.cs">
+      <DependentUpon>SelectStorageAccountWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModel\BaseViewModelö.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
+    <Compile Include="ViewModel\SelectStorageAccountViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Compile Include="ViewModel\WadLogItemViewModel.cs" />
     <Page Include="MainWindow.xaml">
@@ -162,6 +174,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="SelectStorageAccountWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">

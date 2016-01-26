@@ -1,0 +1,21 @@
+﻿<Window x:Class="codingfreaks.WadLogTail.Ui.WindowsApp.SelectStorageAccountWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:codingfreaks.WadLogTail.Ui.WindowsApp"
+        mc:Ignorable="d"
+        Title="{Binding Title, Mode=OneWay}" Height="356" Width="606" WindowStartupLocation="CenterScreen" ShowInTaskbar="False" WindowStyle="ToolWindow">
+    <Window.DataContext>
+        <Binding Path="SelectStorageAccount" Source="{StaticResource Locator}"/>
+    </Window.DataContext>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200" />
+            <ColumnDefinition Width="3" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        
+        <GridSplitter Grid.Column="1"></GridSplitter>
+    </Grid>
+</Window>
