@@ -58,6 +58,7 @@ namespace codingfreaks.WadLogTail.Ui.WindowsApp.Models
                     return false;
                 }
             }
+            Accounts.Where(set => set.Id.IsNullOrEmpty()).ToList().ForEach(set => set.Id = Guid.NewGuid().ToString());
             try
             {
                 File.WriteAllText(fileName, JsonConvert.SerializeObject(this));
@@ -78,7 +79,7 @@ namespace codingfreaks.WadLogTail.Ui.WindowsApp.Models
         /// A list of all storage account settings already used by the user.
         /// </summary>
         public IEnumerable<StorageAccountSetting> Accounts { get; set; } = new List<StorageAccountSetting>();
-
+        
         /// <summary>
         /// The name of the storage account which was used last.
         /// </summary>

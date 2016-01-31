@@ -3,6 +3,7 @@ using System.Linq;
 
 namespace codingfreaks.WadLogTail.Ui.WindowsApp.ViewModel
 {
+    using codingfreaks.cfUtils.Logic.Portable.Extensions;
     using codingfreaks.cfUtils.Logic.Wpf.Components;
     using codingfreaks.cfUtils.Logic.Wpf.MvvmLight;
     using codingfreaks.WadLogTail.Ui.WindowsApp.Attributes;
@@ -11,7 +12,7 @@ namespace codingfreaks.WadLogTail.Ui.WindowsApp.ViewModel
     using codingfreaks.WadLogTail.Ui.WindowsApp.Models;
 
     using GalaSoft.MvvmLight.Command;
-
+    using System.Windows;
     /// <summary>
     /// The view model for the <see cref="SelectStorageAccountWindow"/>.
     /// </summary>
@@ -30,12 +31,37 @@ namespace codingfreaks.WadLogTail.Ui.WindowsApp.ViewModel
                     StoredAccounts.AddRange(Variables.Settings.Accounts);
                 }
                 // create command for OK-button
-                OkCommand = new AutoRelayCommand(
-                    () =>
+                OkCommand = new AutoRelayCommand<Window>(
+                    win =>
                     {
                         Variables.Settings.Accounts = StoredAccounts.ToList();
                         Variables.Settings.Save();
+                        win?.Close();
                     });
+                // create command for Save-button
+                AddNewCommand = new AutoRelayCommand(
+                    () =>
+                    {
+                        var item = new StorageAccountSetting();
+                        StoredAccounts.Add(item);
+                        CurrentSelectedItem = item;
+                    });
+            }
+            else
+            {
+                StoredAccounts = new OptimizedObservableCollection<StorageAccountSetting>
+                {
+                    new StorageAccountSetting()
+                    {
+                        Account = "Testaccount",
+                        Key = "Hello362736273=="
+                    },
+                    new StorageAccountSetting()
+                    {
+                        Account = "Testaccount2",
+                        Key = "fsdfdsf33fv33=="
+                    }
+                };
             }
         }
 
@@ -46,7 +72,12 @@ namespace codingfreaks.WadLogTail.Ui.WindowsApp.ViewModel
         /// <summary>
         /// The command for the OK button.
         /// </summary>
-        public RelayCommand OkCommand { get; private set; }
+        public RelayCommand<Window> OkCommand { get; private set; }
+
+        /// <summary>
+        /// The command for the Add button.
+        /// </summary>
+        public RelayCommand AddNewCommand { get; private set; }
 
         /// <summary>
         /// The list of storage accounts known so far.
@@ -57,6 +88,16 @@ namespace codingfreaks.WadLogTail.Ui.WindowsApp.ViewModel
         /// A part of the window title.
         /// </summary>
         public override string Title => "Select Storage Account";
+
+        /// <summary>
+        /// The item currently in selection.
+        /// </summary>
+        public StorageAccountSetting CurrentSelectedItem { get; set; }
+
+        /// <summary>
+        /// Indicates whether user can edit something.
+        /// </summary>
+        public bool CanEdit => CurrentSelectedItem != null;
 
         #endregion
     }

@@ -242,7 +242,7 @@
             }
             var headerFormat = "{0, -19} | {1, -6} | {2, " + roleInstanceLength * -1 + "} | {3}";
             var format = "{0, 19} | {1, 6} | {2, " + roleInstanceLength + "} | {3}";
-            var headerLine = string.Format(headerFormat, "Timetamp ^", "PID", "Role Instance", "Message");
+            var headerLine = string.Format(headerFormat, "Timestamp ^", "PID", "Role Instance", "Message");
             headerLine += new string(' ', Console.WindowWidth - headerLine.Length);
             Console.Write(headerLine);
             Console.ResetColor();

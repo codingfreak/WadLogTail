@@ -42,6 +42,11 @@ namespace codingfreaks.WadLogTail.Ui.WindowsApp.Models
         public string AccountUrl => $"DefaultEndpointsProtocol=https;AccountName={Account};AccountKey={Key}";
 
         /// <summary>
+        /// A unique id generated at save.
+        /// </summary>
+        public string Id { get; set; }
+
+        /// <summary>
         /// The secret key for the account from the Azure Portal.
         /// </summary>
         public string Key { get; set; }
