@@ -32,7 +32,7 @@ namespace codingfreaks.WadLogTail.Ui.WindowsApp.ViewModel
         /// <summary>
         /// The local timestamp.
         /// </summary>
-        public DateTime LocalTimestamp => EntityItem.EventDateTime.ToLocalTime();
+        public DateTime LocalTimestamp => EntityItem.PreciseTimeStamp.ToLocalTime().DateTime;
 
         /// <summary>
         /// An offset with a number that shows on which position this item was received.

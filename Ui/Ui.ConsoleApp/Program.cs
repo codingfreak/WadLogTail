@@ -259,7 +259,7 @@
                     Console.SetCursorPosition(0, line++);
                     var message = entry.MessageCleaned;
 
-                    Console.Write(format, entry.Timestamp.ToLocalTime().DateTime, entry.Pid, entry.RoleInstance, message.Length <= 300 ? message : message.Substring(0, 299));
+                    Console.Write(format, entry.PreciseTimeStamp.ToLocalTime().DateTime, entry.Pid, entry.RoleInstance, message.Length <= 300 ? message : message.Substring(0, 299));
                 });
             Console.ResetColor();
         }

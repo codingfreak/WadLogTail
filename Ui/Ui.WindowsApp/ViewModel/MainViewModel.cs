@@ -118,7 +118,15 @@ namespace codingfreaks.WadLogTail.Ui.WindowsApp.ViewModel
                             {
                                 _receiveCounter = 0;
                                 var table = StorageHelper.GetTableReference("WADLogsTable", StorageConnectionString);
-                                _helper.StartMonitoringTable(table, 5, TimeSpan.FromDays(2).TotalSeconds);
+                                try
+                                {
+                                    _helper.StartMonitoringTable(table, 5, TimeSpan.FromDays(2).TotalSeconds);
+                                }
+                                catch (Exception ex)
+                                {                                    
+                                    throw;
+                                }
+                                
                             });
                         IsRunning = true;
                     },
