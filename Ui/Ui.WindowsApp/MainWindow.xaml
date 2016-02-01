@@ -39,7 +39,13 @@
         <DockPanel DockPanel.Dock="Top" LastChildFill="True">
             <Button DockPanel.Dock="Right" Content="{Binding StartStopCaption}" Command="{Binding StartStopMonitoringCommand}"/>
             <Button DockPanel.Dock="Right" Content="..." Command="{Binding OpenSelectStorageWindowCommand}"/>
-            <TextBox DockPanel.Dock="Left" Text="{Binding StorageConnectionString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsRunning, Converter={StaticResource InverseBoolConverter}}"/>
+            <ComboBox DockPanel.Dock="Left" 
+                      SelectedValue="{Binding StorageConnectionString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                      IsEnabled="{Binding IsRunning, Converter={StaticResource InverseBoolConverter}}" 
+                      ItemsSource="{Binding Accounts}" 
+                      DisplayMemberPath="Account" 
+                      SelectedValuePath="AccountUrl">
+            </ComboBox>
         </DockPanel>
         <Grid DockPanel.Dock="Top" Style="{DynamicResource InnerGrid}">
             <TextBox Text="{Binding FilterText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsRunning}"/>
@@ -96,3 +102,4 @@
         </DataGrid>
     </DockPanel>
 </Window>
+

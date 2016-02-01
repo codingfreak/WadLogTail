@@ -3,6 +3,8 @@ using System.Linq;
 
 namespace codingfreaks.WadLogTail.Ui.WindowsApp.ViewModel
 {
+    using System.Diagnostics;
+
     using codingfreaks.cfUtils.Logic.Portable.Extensions;
     using codingfreaks.cfUtils.Logic.Wpf.Components;
     using codingfreaks.cfUtils.Logic.Wpf.MvvmLight;
@@ -13,6 +15,9 @@ namespace codingfreaks.WadLogTail.Ui.WindowsApp.ViewModel
 
     using GalaSoft.MvvmLight.Command;
     using System.Windows;
+
+    using GalaSoft.MvvmLight.Messaging;
+
     /// <summary>
     /// The view model for the <see cref="SelectStorageAccountWindow"/>.
     /// </summary>
@@ -36,6 +41,7 @@ namespace codingfreaks.WadLogTail.Ui.WindowsApp.ViewModel
                     {
                         Variables.Settings.Accounts = StoredAccounts.ToList();
                         Variables.Settings.Save();
+                        Messenger.Default.Send(new SettingsChangedMessage());
                         win?.Close();
                     });
                 // create command for Save-button
@@ -46,6 +52,14 @@ namespace codingfreaks.WadLogTail.Ui.WindowsApp.ViewModel
                         StoredAccounts.Add(item);
                         CurrentSelectedItem = item;
                     });
+                // create command for Remove-button
+                RemoveCommand = new AutoRelayCommand(
+                    () =>
+                    {
+                        StoredAccounts.Remove(CurrentSelectedItem);                        
+                    }, 
+                    () => CanEdit);
+                this.PropertyChanged += (s, e) => Trace.WriteLine(e.PropertyName);
             }
             else
             {
@@ -78,6 +92,11 @@ namespace codingfreaks.WadLogTail.Ui.WindowsApp.ViewModel
         /// The command for the Add button.
         /// </summary>
         public RelayCommand AddNewCommand { get; private set; }
+
+        /// <summary>
+        /// The command for the Remove button.
+        /// </summary>
+        public RelayCommand RemoveCommand { get; private set; }
 
         /// <summary>
         /// The list of storage accounts known so far.

@@ -2,6 +2,7 @@ namespace codingfreaks.WadLogTail.Ui.WindowsApp.ViewModel
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.Diagnostics;
     using System.Globalization;
@@ -19,6 +20,7 @@ namespace codingfreaks.WadLogTail.Ui.WindowsApp.ViewModel
     using codingfreaks.cfUtils.Logic.Wpf.Components;
     using codingfreaks.cfUtils.Logic.Wpf.MvvmLight;
     using codingfreaks.WadLogTail.Ui.WindowsApp.Enumerations;
+    using codingfreaks.WadLogTail.Ui.WindowsApp.Helper;
     using codingfreaks.WadLogTail.Ui.WindowsApp.Models;
 
     using GalaSoft.MvvmLight.Command;
@@ -31,11 +33,11 @@ namespace codingfreaks.WadLogTail.Ui.WindowsApp.ViewModel
     {
         #region member vars
 
-        private readonly TableHelper<WadLogEntity> Helper = new TableHelper<WadLogEntity>();
+        private readonly TableHelper<WadLogEntity> _helper = new TableHelper<WadLogEntity>();
+        private readonly List<WadLogItemViewModel> _rawItems = new List<WadLogItemViewModel>();
         private bool _lastSortAsc;
 
         private string _lastSortMemberPath = "timestamp";
-        private readonly List<WadLogItemViewModel> _rawItems = new List<WadLogItemViewModel>();
         private long _receiveCounter;
 
         #endregion
@@ -54,7 +56,7 @@ namespace codingfreaks.WadLogTail.Ui.WindowsApp.ViewModel
             if (!IsInDesignMode)
             {
                 // handle event when new results are received from monitoring
-                Helper.MonitoringReceivedNewEntries += (s, e) =>
+                _helper.MonitoringReceivedNewEntries += (s, e) =>
                 {
                     StatusText = "Receiving entries...";
                     LastResultReceived = DateTime.Now;
@@ -88,7 +90,7 @@ namespace codingfreaks.WadLogTail.Ui.WindowsApp.ViewModel
                     () =>
                     {
                         Messenger.Default.Send(
-                            new WindowRequestOpenMessage()
+                            new WindowRequestOpenMessage
                             {
                                 WindowTarget = WindowTarget.ModalDialog,
                                 WindowType = WindowType.SelectStorageAccountView
@@ -105,7 +107,7 @@ namespace codingfreaks.WadLogTail.Ui.WindowsApp.ViewModel
                                 () =>
                                 {
                                     StatusText = "Stopping monitoring...";
-                                    Helper.StopMonitoringTable();
+                                    _helper.StopMonitoringTable();
                                     IsRunning = false;
                                     StatusText = "Monitoring stopped...";
                                 });
@@ -116,7 +118,7 @@ namespace codingfreaks.WadLogTail.Ui.WindowsApp.ViewModel
                             {
                                 _receiveCounter = 0;
                                 var table = StorageHelper.GetTableReference("WADLogsTable", StorageConnectionString);
-                                Helper.StartMonitoringTable(table, 5, TimeSpan.FromDays(2).TotalSeconds);
+                                _helper.StartMonitoringTable(table, 5, TimeSpan.FromDays(2).TotalSeconds);
                             });
                         IsRunning = true;
                     },
@@ -140,6 +142,7 @@ namespace codingfreaks.WadLogTail.Ui.WindowsApp.ViewModel
                         FilterAndSortEntities(_lastSortMemberPath, _lastSortAsc);
                     }
                 };
+                SetAccounts();
                 // create a new window and display it whenever a response is received
                 Messenger.Default.Register<WindowOpenMessage>(
                     this,
@@ -148,14 +151,15 @@ namespace codingfreaks.WadLogTail.Ui.WindowsApp.ViewModel
                         var win = o.Window as Window;
                         switch (o.WindowTarget)
                         {
-                            case WindowTarget.Dialog:                                                                
+                            case WindowTarget.Dialog:
                                 win?.Show();
                                 break;
-                            case WindowTarget.ModalDialog:                                                                
+                            case WindowTarget.ModalDialog:
                                 win?.ShowDialog();
                                 break;
                         }
                     });
+                Messenger.Default.Register<SettingsChangedMessage>(this, m => SetAccounts());
             }
             else
             {
@@ -203,11 +207,16 @@ namespace codingfreaks.WadLogTail.Ui.WindowsApp.ViewModel
 
         #region methods
 
+        private void SetAccounts()
+        {
+            Accounts = new ObservableCollection<StorageAccountSetting>(Variables.Settings.Accounts);
+        }
+
         public override void Cleanup()
         {
             try
             {
-                Helper.StopMonitoringTable();
+                _helper.StopMonitoringTable();
             }
             catch
             {
@@ -246,6 +255,11 @@ namespace codingfreaks.WadLogTail.Ui.WindowsApp.ViewModel
         #region properties
 
         /// <summary>
+        /// This list of accounts available.
+        /// </summary>
+        public ObservableCollection<StorageAccountSetting> Accounts { get; private set; } 
+
+        /// <summary>
         /// Entries already read from Azure.
         /// </summary>
         public OptimizedObservableCollection<WadLogItemViewModel> Entries { get; set; } = new OptimizedObservableCollection<WadLogItemViewModel>();
@@ -256,7 +270,7 @@ namespace codingfreaks.WadLogTail.Ui.WindowsApp.ViewModel
         public string FilterText { get; set; }
 
         public string FormattedLastResultReceived => LastResultReceived?.ToString("G", CultureInfo.CurrentUICulture);
-       
+
         /// <summary>
         /// Is called when the grids Sorting event is raised.
         /// </summary>
@@ -273,6 +287,11 @@ namespace codingfreaks.WadLogTail.Ui.WindowsApp.ViewModel
         public DateTime? LastResultReceived { get; set; }
 
         /// <summary>
+        /// Opens the window for selecting the storage account.
+        /// </summary>
+        public AutoRelayCommand OpenSelectStorageWindowCommand { get; private set; }
+
+        /// <summary>
         /// The caption for the start-/stop button.
         /// </summary>
         public string StartStopCaption => IsRunning ? "Stop" : "Start";
@@ -281,11 +300,6 @@ namespace codingfreaks.WadLogTail.Ui.WindowsApp.ViewModel
         /// Starts or stops a monitoring.
         /// </summary>
         public AutoRelayCommand StartStopMonitoringCommand { get; private set; }
-
-        /// <summary>
-        /// Opens the window for selecting the storage account.
-        /// </summary>
-        public AutoRelayCommand OpenSelectStorageWindowCommand { get; private set; }
 
         /// <summary>
         /// The text to display in the status bar.

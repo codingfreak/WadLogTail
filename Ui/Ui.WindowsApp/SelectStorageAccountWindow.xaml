@@ -16,6 +16,11 @@
             <Setter Property="Background" Value="DarkCyan"></Setter>
             <Setter Property="Foreground" Value="White"></Setter>
         </Style>
+        <Style TargetType="Button" x:Key="RemoveButtonStyle">
+            <Setter Property="Padding" Value="5 0" />
+            <Setter Property="Background" Value="DarkRed"></Setter>
+            <Setter Property="Foreground" Value="White"></Setter>
+        </Style>
         <Style TargetType="TextBox">
             <Setter Property="Margin" Value="0 3 0 0" />
         </Style>
@@ -36,13 +41,14 @@
         </StackPanel>
         <Grid DockPanel.Dock="Top">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="300" />
+                <ColumnDefinition Width="200" MinWidth="200"/>
                 <ColumnDefinition Width="3" />
-                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <DockPanel LastChildFill="True" Grid.Column="0">
                 <DockPanel DockPanel.Dock="Top" LastChildFill="True">
-                    <Button DockPanel.Dock="Right" Content="+" Command="{Binding AddNewCommand, Mode=OneWay}" Style="{DynamicResource AddButtonStyle}"></Button>
+                    <Button DockPanel.Dock="Right" Content="-" Command="{Binding RemoveCommand}" Style="{DynamicResource RemoveButtonStyle}"></Button>
+                    <Button DockPanel.Dock="Right" Content="+" Command="{Binding AddNewCommand}" Style="{DynamicResource AddButtonStyle}"></Button>
                     <TextBlock DockPanel.Dock="Left" Style="{DynamicResource HeaderText}">Select existing storage accounts</TextBlock>
                 </DockPanel>
                 <ListBox DockPanel.Dock="Top" ItemsSource="{Binding StoredAccounts}" SelectedItem="{Binding CurrentSelectedItem, Mode=TwoWay}" HorizontalContentAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
@@ -62,7 +68,7 @@
                     </ListBox.ItemTemplate>
                 </ListBox>
             </DockPanel>
-            <GridSplitter Grid.Column="1"></GridSplitter>
+            <GridSplitter Grid.Column="1" ResizeDirection="Columns" HorizontalAlignment="Stretch"></GridSplitter>
             <DockPanel LastChildFill="True" Grid.Column="2">
                 <TextBlock DockPanel.Dock="Top" Style="{DynamicResource HeaderText}">Account Data</TextBlock>
                 <Grid DockPanel.Dock="Top">
@@ -73,7 +79,6 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
-                        <RowDefinition />
                     </Grid.RowDefinitions>
 
                     <Label Grid.Row="0" Grid.Column="0">Account</Label>
