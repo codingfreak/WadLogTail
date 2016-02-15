@@ -7,10 +7,8 @@
         xmlns:Converters="clr-namespace:codingfreaks.cfUtils.Logic.Wpf.Converters;assembly=cfUtils.cfWpfUtils"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:Command="http://www.galasoft.ch/mvvmlight"
-        x:Class="codingfreaks.WadLogTail.Ui.WindowsApp.MainWindow"
-        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
-        xmlns:xcdg="http://schemas.xceed.com/wpf/xaml/datagrid"
-        xmlns:adorners="http://gu.se/Adorners"
+        x:Class="codingfreaks.WadLogTail.Ui.WindowsApp.MainWindow"        
+        xmlns:Adorners="http://gu.se/Adorners"
         mc:Ignorable="d"
         Title="{Binding Title}" Height="350" Width="893"
         IsEnabled="{Binding IsVisible, Source={StaticResource MessageListener}}">
@@ -49,7 +47,7 @@
             </ComboBox>
         </DockPanel>
         <Grid DockPanel.Dock="Top" Style="{DynamicResource InnerGrid}">
-            <TextBox adorners:Watermark.Text="Search"  Text="{Binding FilterText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <TextBox Adorners:Watermark.Text="Search"  Text="{Binding FilterText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
         </Grid>
         <StatusBar DockPanel.Dock="Bottom">
             <StatusBarItem DockPanel.Dock="Right" ToolTip="Loaded rows.">
@@ -63,10 +61,10 @@
             </StatusBarItem>
         </StatusBar>
         <!-- add the grid last so it takes the complete remaining space of the form -->
-        <DataGrid DockPanel.Dock="Top" ItemsSource="{Binding Entries}" IsReadOnly="True" AutoGenerateColumns="False" GridLinesVisibility="Vertical">
+        <DataGrid DockPanel.Dock="Top" ItemsSource="{Binding Entries}" IsReadOnly="True" AutoGenerateColumns="False" GridLinesVisibility="Vertical" BorderBrush="{x:Null}">
             <DataGrid.Resources>
                 <Style TargetType="DataGridRow">
-                    <Setter Property="Height" Value="32" />
+                    <Setter Property="Height" Value="28" />
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding IsNew}" Value="True">
                             <Setter Property="Foreground" Value="Green" />
@@ -74,7 +72,7 @@
                     </Style.Triggers>
                 </Style>
                 <Style TargetType="DataGridCell">
-                    <Setter Property="Padding" Value="2 6"></Setter>
+                    <Setter Property="Padding" Value="2 5"></Setter>
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate TargetType="{x:Type DataGridCell}">

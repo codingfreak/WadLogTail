@@ -3,9 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:codingfreaks.WadLogTail.Ui.WindowsApp"
         mc:Ignorable="d"
-        Title="{Binding Title, Mode=OneWay}" Height="356" Width="606" WindowStartupLocation="CenterScreen" ShowInTaskbar="False" WindowStyle="ToolWindow">
+        Title="{Binding Title, Mode=OneWay}" Height="356" Width="735" WindowStartupLocation="CenterScreen" ShowInTaskbar="False" WindowStyle="ToolWindow">
     <Window.Resources>
         <Style TargetType="Button">
             <Setter Property="Padding" Value="10 3" />
@@ -41,7 +40,7 @@
         </StackPanel>
         <Grid DockPanel.Dock="Top">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="200" MinWidth="200"/>
+                <ColumnDefinition Width="230" MinWidth="200"/>
                 <ColumnDefinition Width="3" />
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
@@ -54,14 +53,14 @@
                 <ListBox DockPanel.Dock="Top" ItemsSource="{Binding StoredAccounts}" SelectedItem="{Binding CurrentSelectedItem, Mode=TwoWay}" HorizontalContentAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
-                            <Border Margin="0 3" BorderBrush="Black" BorderThickness="1">
+                            <Border BorderBrush="Black" BorderThickness="1">
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition />
                                         <RowDefinition />
                                     </Grid.RowDefinitions>
                                     <Label Grid.Row="0" Content="{Binding Account}"></Label>
-                                    <TextBlock Grid.Row="1" Text="{Binding AccountUrl}" TextWrapping="Wrap"></TextBlock>
+                                    <TextBlock Grid.Row="1" Text="{Binding AccountUrl}" TextWrapping="Wrap" Margin="8 2 5 8" FontSize="8"></TextBlock>
                                 </Grid>
                             </Border>
                         </DataTemplate>
