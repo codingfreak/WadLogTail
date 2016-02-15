@@ -8,5 +8,4 @@
 [assembly: AssemblyCopyright("Copyright © codingfreaks 2016")]
 [assembly: AssemblyTrademark("AzureLogTableWatcher")]
 [assembly: AssemblyCulture("")]
-[assembly: AssemblyVersion("1.0.1.*")]
-[assembly: AssemblyFileVersion("1.0.1.0")]
+[assembly: AssemblyVersion("1.0.2.*")]

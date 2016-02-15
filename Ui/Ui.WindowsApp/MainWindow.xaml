@@ -10,6 +10,7 @@
         x:Class="codingfreaks.WadLogTail.Ui.WindowsApp.MainWindow"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:xcdg="http://schemas.xceed.com/wpf/xaml/datagrid"
+        xmlns:adorners="http://gu.se/Adorners"
         mc:Ignorable="d"
         Title="{Binding Title}" Height="350" Width="893"
         IsEnabled="{Binding IsVisible, Source={StaticResource MessageListener}}">
@@ -48,7 +49,7 @@
             </ComboBox>
         </DockPanel>
         <Grid DockPanel.Dock="Top" Style="{DynamicResource InnerGrid}">
-            <TextBox Text="{Binding FilterText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsRunning}"/>
+            <TextBox adorners:Watermark.Text="Search"  Text="{Binding FilterText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
         </Grid>
         <StatusBar DockPanel.Dock="Bottom">
             <StatusBarItem DockPanel.Dock="Right" ToolTip="Loaded rows.">
