@@ -14,7 +14,6 @@ namespace codingfreaks.WadLogTail.Ui.WindowsApp.ViewModel
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Data;
-    using System.Windows.Threading;
 
     using codingfreaks.cfUtils.Logic.Azure;
     using codingfreaks.cfUtils.Logic.Wpf.Components;
@@ -25,6 +24,7 @@ namespace codingfreaks.WadLogTail.Ui.WindowsApp.ViewModel
 
     using GalaSoft.MvvmLight.Command;
     using GalaSoft.MvvmLight.Messaging;
+    using GalaSoft.MvvmLight.Threading;
 
     /// <summary>
     /// The view model for the <see cref="MainWindow"/>.
@@ -34,6 +34,8 @@ namespace codingfreaks.WadLogTail.Ui.WindowsApp.ViewModel
         #region member vars
 
         private readonly TableHelper<WadLogEntity> _helper = new TableHelper<WadLogEntity>();
+
+        private readonly object _listLock = new object();
         private readonly List<WadLogItemViewModel> _rawItems = new List<WadLogItemViewModel>();
         private bool _lastSortAsc;
 
@@ -55,16 +57,21 @@ namespace codingfreaks.WadLogTail.Ui.WindowsApp.ViewModel
             BindingOperations.EnableCollectionSynchronization(Entries, _lock);
             if (!IsInDesignMode)
             {
+                DispatcherHelper.Initialize();
                 // handle event when new results are received from monitoring
                 _helper.MonitoringReceivedNewEntries += (s, e) =>
                 {
+                    if (!e.Entries.Any())
+                    {
+                        return;
+                    }
                     StatusText = "Receiving entries...";
-                    LastResultReceived = DateTime.Now;
-                    Dispatcher.CurrentDispatcher.Invoke(
+                    DispatcherHelper.UIDispatcher.Invoke(
                         () =>
                         {
                             try
                             {
+                                LastResultReceived = DateTime.Now;
                                 _rawItems.ToList().ForEach(ent => ent.IsNew = false);
                                 _rawItems.AddRange(
                                     e.Entries.Select(
@@ -74,6 +81,7 @@ namespace codingfreaks.WadLogTail.Ui.WindowsApp.ViewModel
                                             IsNew = true,
                                             ReceiveCounter = ++_receiveCounter
                                         }));
+
                                 FilterAndSortEntities("timestamp", false);
                                 StatusText = e.Entries.Count() + " entries received.";
                             }
@@ -81,7 +89,6 @@ namespace codingfreaks.WadLogTail.Ui.WindowsApp.ViewModel
                             {
                                 Trace.TraceError(ex.Message);
                                 StatusText = "Error";
-                                throw;
                             }
                         });
                 };
@@ -113,22 +120,14 @@ namespace codingfreaks.WadLogTail.Ui.WindowsApp.ViewModel
                                 });
                             return;
                         }
+                        IsRunning = true;
                         Task.Run(
                             () =>
                             {
                                 _receiveCounter = 0;
                                 var table = StorageHelper.GetTableReference("WADLogsTable", StorageConnectionString);
-                                try
-                                {
-                                    _helper.StartMonitoringTable(table, 5, TimeSpan.FromDays(2).TotalSeconds);
-                                }
-                                catch (Exception ex)
-                                {                                    
-                                    throw;
-                                }
-                                
+                                _helper.StartMonitoringTable(table, 5, TimeSpan.FromDays(30).TotalSeconds);
                             });
-                        IsRunning = true;
                     },
                     () => IsRunning || !StorageConnectionString.IsNullOrEmpty());
                 // ensure that the StartStopMonitoringCommand is re-evaluated when the StorageConnectionString changes
@@ -215,11 +214,6 @@ namespace codingfreaks.WadLogTail.Ui.WindowsApp.ViewModel
 
         #region methods
 
-        private void SetAccounts()
-        {
-            Accounts = new ObservableCollection<StorageAccountSetting>(Variables.Settings.Accounts);
-        }
-
         public override void Cleanup()
         {
             try
@@ -250,12 +244,17 @@ namespace codingfreaks.WadLogTail.Ui.WindowsApp.ViewModel
                         : entries.OrderByDescending(e => e.EntityItem.Timestamp).ThenByDescending(e => e.ReceiveCounter).ToList();
                     break;
             }
-            Entries = new OptimizedObservableCollection<WadLogItemViewModel>();
             if (!FilterText.IsNullOrEmpty())
             {
                 entries = entries.Where(item => item.EntityItem.MessageCleaned.ToLower().Contains(FilterText.ToLower())).ToList();
             }
+            Entries = new OptimizedObservableCollection<WadLogItemViewModel>();
             Entries.AddRange(entries);
+        }
+
+        private void SetAccounts()
+        {
+            Accounts = new ObservableCollection<StorageAccountSetting>(Variables.Settings.Accounts);
         }
 
         #endregion
@@ -265,7 +264,7 @@ namespace codingfreaks.WadLogTail.Ui.WindowsApp.ViewModel
         /// <summary>
         /// This list of accounts available.
         /// </summary>
-        public ObservableCollection<StorageAccountSetting> Accounts { get; private set; } 
+        public ObservableCollection<StorageAccountSetting> Accounts { get; private set; }
 
         /// <summary>
         /// Entries already read from Azure.
