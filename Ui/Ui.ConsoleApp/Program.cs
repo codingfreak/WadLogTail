@@ -75,6 +75,10 @@
             var table = tableClient.GetTableReference("WADLogsTable");
             Helper.MonitoringReceivedNewEntries += (s, e) =>
             {
+                if (!e.Entries.Any())
+                {
+                    return;
+                }
                 var entries = e.Entries;
                 var lastTicks = long.Parse(allEntries.LastOrDefault()?.PartitionKey ?? "0");
                 allEntries.AddRange(entries);
@@ -145,7 +149,11 @@
                     }
                 });
             var tokenSource = new CancellationTokenSource();
-            Task.Run(async () => await Helper.MonitorTableAsync(table, tokenSource.Token, 5, secondsInPast), tokenSource.Token);
+            Task.Run(
+                async () =>
+                {
+                    await Helper.MonitorTableAsync(table, tokenSource.Token, 5, secondsInPast);
+                }, tokenSource.Token);
             Console.ReadKey();
             Console.Clear();
             Console.WriteLine("Cancelling process...");
